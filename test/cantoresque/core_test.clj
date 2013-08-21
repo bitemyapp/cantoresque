@@ -5,15 +5,13 @@
 
 (def left-set
   #{{:name "Jose Valim" :awesome true}
-    {:name "Joe Armstrong" :awesome true}
-    {:name "John McCarthy" :awesome true}
-    {:name "Chris Allen"}})
+    {:name "Chris Allen"}
+    {:awesome nil}})
 
 (def right-set
   #{{:name "Jose Valim" :lang "Elixir"}
-    {:name "Joe Armstrong" :lang "Erlang"}
-    {:name "John McCarthy" :lang "LISP"}
-    {:name "Chris Allen"}})
+    {:name "Chris Allen" :blah true}
+    {:lang "C"}})
 
 (deftest set-joins
   (testing "Cartesian joins"
@@ -21,4 +19,10 @@
            (set/join left-set right-set))))
   (testing "Inner joins"
     (is (= (inner-join left-set right-set {:name :name})
-           (set/join left-set right-set {:name :name})))))
+           (set/join left-set right-set {:name :name}))))
+  (testing "Outer joins"
+    (is (= (outer-join left-set right-set {:name :name})
+           #{{:name "Jose Valim" :lang "Elixir" :awesome true}
+             {:name "Chris Allen" :blah true}
+             {:awesome nil}
+             {:lang "C"}}))))
